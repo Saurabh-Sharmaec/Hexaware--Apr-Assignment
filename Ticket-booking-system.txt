@@ -1,0 +1,607 @@
+
+-- Schema tbs
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema tbs
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `tbs` DEFAULT CHARACTER SET utf8 ;
+USE `tbs` ;
+
+-- -----------------------------------------------------
+-- Table `tbs`.`venue`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tbs`.`venue` (
+  `venue_id` INT NOT NULL AUTO_INCREMENT,
+  `venue_name` VARCHAR(45) NOT NULL,
+  `address` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`venue_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `tbs`.`event`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tbs`.`event` (
+  `event_id` INT NOT NULL AUTO_INCREMENT,
+  `event_name` VARCHAR(45) NOT NULL,
+  `event_date` VARCHAR(45) NOT NULL,
+  `event_time` VARCHAR(45) NOT NULL,
+  `total_seats` INT NOT NULL,
+  `available_seats` INT NULL,
+  `ticket_price` INT NOT NULL,
+  `event_type` VARCHAR(45) NOT NULL,
+  `venue_venue_id` INT NOT NULL,
+  PRIMARY KEY (`event_id`),
+  INDEX `fk_event_venue_idx` (`venue_venue_id` ASC),
+  CONSTRAINT `fk_event_venue`
+    FOREIGN KEY (`venue_venue_id`)
+    REFERENCES `tbs`.`venue` (`venue_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `tbs`.`customer`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tbs`.`customer` (
+  `customer_id` INT NOT NULL AUTO_INCREMENT,
+  `customer_name` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(45) NULL,
+  `phone_number` BIGINT(20) NOT NULL,
+  PRIMARY KEY (`customer_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `tbs`.`booking`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tbs`.`booking` (
+  `booking_id` INT NOT NULL AUTO_INCREMENT,
+  `event_event_id` INT NOT NULL,
+  `customer_customer_id` INT NOT NULL,
+  `num_tickets` INT NOT NULL,
+  `total_cost` DOUBLE NOT NULL,
+  `booking_date` DATE NOT NULL,
+  PRIMARY KEY (`booking_id`, `event_event_id`, `customer_customer_id`),
+  INDEX `fk_event_has_customer_customer1_idx` (`customer_customer_id` ASC),
+  INDEX `fk_event_has_customer_event1_idx` (`event_event_id` ASC),
+  CONSTRAINT `fk_event_has_customer_event1`
+    FOREIGN KEY (`event_event_id`)
+    REFERENCES `tbs`.`event` (`event_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_event_has_customer_customer1`
+    FOREIGN KEY (`customer_customer_id`)
+    REFERENCES `tbs`.`customer` (`customer_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+use tbs;
+
+insert into venue(venue_name,address) values 
+('mumbai', 'marol andheri(w)'),
+('chennai', 'IT Park'),
+('pondicherry ', 'state beach');
+select * from venue;
+delete from venue where venue_id=4;
+insert into customer(customer_name,email,phone_number) 
+values
+('harry potter','harry@gmail.com','45454545'),
+('ronald weasley','ron@gmail.com','45454545'),
+('hermione granger','her@gmail.com','45454545'),
+('draco malfoy','drac@gmail.com','45454545'),
+('ginni weasley','ginni@gmail.com','45454545');
+insert into customer(customer_name,email,phone_number) 
+values('Hagrid Rubeus','hagrid@gmail.com', 23450000);
+update customer set phone_number = 1232560000
+where customer_id=4;
+select * from customer; 
+delete from customer where customer_id=5;
+
+insert into event(event_name,event_date,event_time,total_seats,available_seats,ticket_price,event_type,venue_id)
+values 
+
+('Late Ms. Lata Mangeshkar Musical', '2021-09-12','20:00',320,270,600,'concert',3),
+('CSK vs RCB', '2024-04-11','19:30',23000,3,3600,'sports',2),
+('CSK vs RR', '2024-04-19','19:30',23000,10,3400,'sports',2),
+('MI vs KKR', '2024-05-01','15:30',28000,100,8000,'sports',1);
+update event
+set event_name = 'Late Ms. Lata Mangeshkar Musical Concert'
+where event_id= 4;
+
+select * from event;
+insert into event(event_name,event_date,event_time,total_seats,available_seats,ticket_price,event_type,venue_id)
+values 
+('conference cup', '2024-05-01','15:30',28000,99,8000,'sports',1);
+ 
+
+insert into booking(event_id,customer_id,num_tickets,total_cost,booking_date)
+values 
+(4,1,2,640,'2021-09-12'),
+(4,4,3,960,'2021-09-12'),
+(2,1,3,10800,'2024-04-11'),
+(3,3,5,18000,'2024-04-10'),
+(1,5,10,34000,'2024-04-15'),
+(2,2,4,32000,'2024-05-01');
+select* from booking;
+update booking 
+set event_id=2 where booking_id=42;
+delete from event WHERE event_id=5;
+
+-- Tasks 2: Select, Where, Between, AND, LIKE:
+-- 1. Write a SQL query to insert at least 10 sample records into each table.
+insert into venue(venue_name,address) values 
+('goa', 'marol park(e)'),
+('udipi', 'rosa avenue(w)'),
+('bhopal', 'indrapuri (w)'),
+('ujjain', 'sector(c)'),
+('kolkata', 'fort william(s)'),
+('delhi', 'canaught palace(w)'),
+('jaipur', 'jk road(w)'),
+('banglore', 'white feild(e)'),
+('pune', 'cyber park(w)'),
+('hydrabad', 'hitech city(w)');
+
+insert into customer(customer_name,email,phone_number) 
+values
+('rohan sinha','rohan@gmail.com','4545000415'),
+('sajjid','sajjid@gmail.com','4523425000'),
+('kartik','kartik@gmail.com','45464008045'),
+('ranveer sharma','ranveer@gmail.com','2234254345');
+
+insert into event(event_name,event_date,event_time,total_seats,available_seats,ticket_price,event_type,venue_id)
+values 
+('fifa', '2024-09-11','13:30',28000,993,6000,'sports',16),
+('film fare', '2024-03-21','1:30',28000,89,9000,'award',15),
+('oscars', '2024-05-29','7:30',28000,9,90000,'award',7),
+('standup commedy', '2024-03-21','4:30',28000,999,920,'humour',8),
+('folk dance', '2024-02-11','9:30',28000,879,3000,'drama',9),
+('discourse', '2024-07-11','7:34',28000,8,9000,'relegious',10);
+select * from customer;
+
+insert into booking(event_id,customer_id,num_tickets,total_cost,booking_date)
+values 
+(4,1,2,640,'2024-01-01'),
+(21,15,4,630,'2024-04-02'),
+(20,3,3,690,'2024-01-03'),
+(19,5,6,900,'2024-01-04'),
+(18,11,5,420,'2024-03-06'),
+(17,12,2,940,'2024-01-08'),
+(16,13,6,630,'2024-01-09'),
+(9,14,8,690,'2024-01-19');
+
+-- 2. Write a SQL query to list all Events.
+select * from event;
+/*
+# event_id, event_name, event_date, event_time, total_seats, available_seats, ticket_price, event_type, venue_id
+1, Late Ms. Lata Mangeshkar Musical Concert, 2021-09-12, 20:00, 320, 270, 600, concert, 3
+2, CSK vs RCB, 2024-04-11, 19:30, 23000, 3, 3600, sports, 2
+3, CSK vs RR, 2024-04-19, 19:30, 23000, 10, 3400, sports, 2
+4, Late Ms. Lata Mangeshkar Musical Concert, 2024-05-01, 15:30, 28000, 100, 8000, sports, 1
+9, conference cup, 2024-05-01, 15:30, 28000, 99, 8000, sports, 1
+16, fifa, 2024-09-11, 13:30, 28000, 993, 6000, sports, 16
+17, film fare, 2024-03-21, 1:30, 28000, 89, 9000, award, 15
+18, oscars, 2024-05-29, 7:30, 28000, 9, 90000, award, 7
+19, standup commedy, 2024-03-21, 4:30, 28000, 999, 920, humour, 8
+20, folk dance, 2024-02-11, 9:30, 28000, 879, 3000, drama, 9
+21, discourse, 2024-07-11, 7:34, 28000, 8, 9000, relegious, 10
+*/
+-- 3. Write a SQL query to select events with available tickets.
+
+  select * from event WHERE available_seats > 0;
+  /*
+  # event_id, event_name, event_date, event_time, total_seats, available_seats, ticket_price, event_type, venue_id
+1, Late Ms. Lata Mangeshkar Musical Concert, 2021-09-12, 20:00, 320, 270, 600, concert, 3
+2, CSK vs RCB, 2024-04-11, 19:30, 23000, 3, 3600, sports, 2
+3, CSK vs RR, 2024-04-19, 19:30, 23000, 10, 3400, sports, 2
+4, Late Ms. Lata Mangeshkar Musical Concert, 2024-05-01, 15:30, 28000, 100, 8000, sports, 1
+9, conference cup, 2024-05-01, 15:30, 28000, 99, 8000, sports, 1
+16, fifa, 2024-09-11, 13:30, 28000, 993, 6000, sports, 16
+17, film fare, 2024-03-21, 1:30, 28000, 89, 9000, award, 15
+18, oscars, 2024-05-29, 7:30, 28000, 9, 90000, award, 7
+19, standup commedy, 2024-03-21, 4:30, 28000, 999, 920, humour, 8
+20, folk dance, 2024-02-11, 9:30, 28000, 879, 3000, drama, 9
+21, discourse, 2024-07-11, 7:34, 28000, 8, 9000, relegious, 10
+*/
+
+-- 4. Write a SQL query to select events name partial match with 'cup'.
+
+select * from event WHERE event_name LIKE '%CUP%';
+/*
+# event_id, event_name, event_date, event_time, total_seats, available_seats, ticket_price, event_type, venue_id
+9, conference cup, 2024-05-01, 15:30, 28000, 99, 8000, sports, 1
+*/
+-- 5. Write a SQL query to select events with ticket price range is between 1000 to 2500.
+select * from event where ticket_price  between 100 and 1000; 
+/*
+# event_id, event_name, event_date, event_time, total_seats, available_seats, ticket_price, event_type, venue_id
+1, Late Ms. Lata Mangeshkar Musical Concert, 2021-09-12, 20:00, 320, 270, 600, concert, 3
+19, standup commedy, 2024-03-21, 4:30, 28000, 999, 920, humour, 8
+*/
+-- 6. Write a SQL query to retrieve events with dates falling within a specific range.
+SELECT * FROM event WHERE event_date BETWEEN '2024-04-11' AND '2024-05-01';
+/*
+# event_id, event_name, event_date, event_time, total_seats, available_seats, ticket_price, event_type, venue_id
+2, CSK vs RCB, 2024-04-11, 19:30, 23000, 3, 3600, sports, 2
+3, CSK vs RR, 2024-04-19, 19:30, 23000, 10, 3400, sports, 2
+4, Late Ms. Lata Mangeshkar Musical Concert, 2024-05-01, 15:30, 28000, 100, 8000, sports, 1
+9, conference cup, 2024-05-01, 15:30, 28000, 99, 8000, sports, 1
+*/
+-- 7. Write a SQL query to retrieve events with available tickets that also have "Concert" in their name.
+select * from event where available_seats > 0 AND event_name like '%concert';
+/*
+# event_id, event_name, event_date, event_time, total_seats, available_seats, ticket_price, event_type, venue_id
+1, Late Ms. Lata Mangeshkar Musical Concert, 2021-09-12, 20:00, 320, 270, 600, concert, 3
+4, Late Ms. Lata Mangeshkar Musical Concert, 2024-05-01, 15:30, 28000, 100, 8000, sports, 1
+*/
+-- 8. Write a SQL query to retrieve users in batches of 5, starting from the 6th user.
+select * from customer order by customer_id limit 5 Offset 5;
+/*
+# customer_id, customer_name, email, phone_number
+11, Hagrid Rubeus, hagrid@gmail.com, 23450000
+12, rohan sinha, rohan@gmail.com, 4545000415
+13, sajjid, sajjid@gmail.com, 4523425000
+14, kartik, kartik@gmail.com, 45464008045
+15, ranveer sharma, ranveer@gmail.com, 2234254345
+*/
+-- 9. Write a SQL query to retrieve bookings details contains booked no of ticket more than 4.
+select* from booking where num_tickets > 4;
+/*
+# booking_id, event_id, customer_id, num_tickets, total_cost, booking_date
+40, 3, 3, 5, 18000, 2024-04-10
+41, 1, 5, 10, 34000, 2024-04-15
+54, 19, 5, 6, 900, 2024-01-04
+55, 18, 11, 5, 420, 2024-03-06
+57, 16, 13, 6, 630, 2024-01-09
+58, 9, 14, 8, 690, 2024-01-19
+*/
+
+-- 10. Write a SQL query to retrieve customer information whose phone number end with '000'
+select* from customer where phone_number like'%0000';
+/*
+# customer_id, customer_name, email, phone_number
+4, draco malfoy, drac@gmail.com, 1232560000
+11, Hagrid Rubeus, hagrid@gmail.com, 23450000
+*/
+
+-- 11. Write a SQL query to retrieve the events in order whose seat capacity more than 15000.
+select* from event where total_seats > 15000;
+/*
+# event_id, event_name, event_date, event_time, total_seats, available_seats, ticket_price, event_type, venue_id
+2, CSK vs RCB, 2024-04-11, 19:30, 23000, 3, 3600, sports, 2
+3, CSK vs RR, 2024-04-19, 19:30, 23000, 10, 3400, sports, 2
+4, Late Ms. Lata Mangeshkar Musical Concert, 2024-05-01, 15:30, 28000, 100, 8000, sports, 1
+9, conference cup, 2024-05-01, 15:30, 28000, 99, 8000, sports, 1
+16, fifa, 2024-09-11, 13:30, 28000, 993, 6000, sports, 16
+17, film fare, 2024-03-21, 1:30, 28000, 89, 9000, award, 15
+18, oscars, 2024-05-29, 7:30, 28000, 9, 90000, award, 7
+19, standup commedy, 2024-03-21, 4:30, 28000, 999, 920, humour, 8
+20, folk dance, 2024-02-11, 9:30, 28000, 879, 3000, drama, 9
+21, discourse, 2024-07-11, 7:34, 28000, 8, 9000, relegious, 10
+*/
+-- 12. Write a SQL query to select events name not start with 'x', 'y', '2'
+select * from event where event_name not like 'x%' and event_name not like 'y%' and event_name not like '2%';
+/*
+# event_id, event_name, event_date, event_time, total_seats, available_seats, ticket_price, event_type, venue_id
+1, Late Ms. Lata Mangeshkar Musical Concert, 2021-09-12, 20:00, 320, 270, 600, concert, 3
+2, CSK vs RCB, 2024-04-11, 19:30, 23000, 3, 3600, sports, 2
+3, CSK vs RR, 2024-04-19, 19:30, 23000, 10, 3400, sports, 2
+4, Late Ms. Lata Mangeshkar Musical Concert, 2024-05-01, 15:30, 28000, 100, 8000, sports, 1
+9, conference cup, 2024-05-01, 15:30, 28000, 99, 8000, sports, 1
+16, fifa, 2024-09-11, 13:30, 28000, 993, 6000, sports, 16
+17, film fare, 2024-03-21, 1:30, 28000, 89, 9000, award, 15
+18, oscars, 2024-05-29, 7:30, 28000, 9, 90000, award, 7
+19, standup commedy, 2024-03-21, 4:30, 28000, 999, 920, humour, 8
+20, folk dance, 2024-02-11, 9:30, 28000, 879, 3000, drama, 9
+21, discourse, 2024-07-11, 7:34, 28000, 8, 9000, relegious, 10
+*/
+-- Tasks 3: Aggregate functions, Having, Order By, GroupBy and Joins:
+-- 1. Write a SQL query to List Events and Their Average Ticket Prices.
+select e.event_name, avg(b.total_cost) as average_ticket_price
+from event e join booking b on b.event_id=e.event_id
+group by e.event_id;
+/*
+# event_name, average_ticket_price
+Late Ms. Lata Mangeshkar Musical Concert, 34000.0000
+CSK vs RCB, 21400.0000
+CSK vs RR, 18000.0000
+Late Ms. Lata Mangeshkar Musical Concert, 746.6667
+conference cup, 690.0000
+fifa, 630.0000
+film fare, 940.0000
+oscars, 420.0000
+standup commedy, 900.0000
+folk dance, 690.0000
+discourse, 630.0000
+
+*/
+-- 2. Write a SQL query to Calculate the Total Revenue Generated by Events.
+select e.event_name,sum(b.total_cost) as total_revenue
+from event e, booking b  where  b.event_id=e.event_id
+group by e.event_id;
+/*
+# event_name, total_revenue
+CSK vs RCB, 42800
+CSK vs RR, 18000
+Late Ms. Lata Mangeshkar Musical Concert, 2240
+conference cup, 690
+fifa, 630
+film fare, 940
+oscars, 420
+standup commedy, 900
+folk dance, 690
+discourse, 630
+
+
+*/
+-- 3. Write a SQL query to find the event with the highest ticket sales.
+select e.event_name, max(b.num_tickets) as highest_tkt
+from event e join booking b on b.event_id=e.event_id
+group by e.event_id
+limit 1;
+/*
+# event_name, highest_tkt
+Late Ms. Lata Mangeshkar Musical Concert, 10
+*/
+-- 4. Write a SQL query to Calculate the Total Number of Tickets Sold for Each Event.
+select e.event_name, max(b.num_tickets) as total_tkt_sold
+from event e join booking b on b.event_id=e.event_id
+group by e.event_id
+order by total_tkt_sold  desc;
+
+/*
+# event_name, total_tkt_sold
+Late Ms. Lata Mangeshkar Musical Concert, 10
+conference cup, 8
+fifa, 6
+standup commedy, 6
+CSK vs RR, 5
+oscars, 5
+CSK vs RCB, 4
+discourse, 4
+Late Ms. Lata Mangeshkar Musical Concert, 3
+folk dance, 3
+film fare, 2
+*/
+-- 5. Write a SQL query to Find Events with No Ticket Sales.
+select e.event_name
+from event e
+where total_seats = available_seats;
+
+-- 6. Write a SQL query to Find the User Who Has Booked the Most Tickets.
+select c.customer_name,  max(b.num_tickets) as max_tickets
+from customer c join booking b on b.customer_id=c.customer_id
+group by c.customer_id
+order by max_tickets desc
+limit 1;
+/*
+# customer_name, max_tickets
+ginni weasley, 10
+*/
+
+
+-- 8-. Write a SQL query to calculate the average Ticket Price for Events in Each Venue.
+select v.venue_name, avg(e.ticket_price) as avg_tkt_price 
+from event e, venue v where e.venue_id=v.venue_id
+group by v.venue_id;
+/*
+# venue_name, avg_tkt_price
+pondicherry , 600.0000
+chennai, 3500.0000
+mumbai, 8000.0000
+hydrabad, 6000.0000
+pune, 9000.0000
+goa, 90000.0000
+udipi, 920.0000
+bhopal, 3000.0000
+ujjain, 9000.0000
+*/
+
+-- 9. Write a SQL query to calculate the total Number of Tickets Sold for Each Event Type.
+
+select e.event_type, sum(b.num_tickets) as total_tkt
+from event e join booking b on e.event_id=b.event_id
+group by e.event_type;
+/*
+# event_type, total_tkt
+concert, 10
+sports, 33
+award, 7
+humour, 6
+drama, 3
+relegious, 4
+*/
+
+
+
+-- 11. Write a SQL query to list users who have booked tickets for multiple events.
+select c.customer_name, count(c.customer_id) as no_of_booking
+from booking b join customer c on c.customer_id = b.customer_id
+group by c.customer_id
+having no_of_booking >1;
+/*
+# customer_name, no_of_booking
+harry potter, 3
+hermione granger, 2
+ginni weasley, 2
+*/
+-- 12. Write a SQL query to calculate the Total Revenue Generated by Events for Each User.
+select c.customer_name, sum(b.total_cost) as revenue
+from event e, booking b, customer c
+where e.event_id=b.event_id and b.customer_id=c.customer_id
+group by b.customer_id;
+/*
+# customer_name, revenue
+harry potter, 12080
+draco malfoy, 960
+kartik, 690
+ronald weasley, 32000
+hermione granger, 18690
+ginni weasley, 34900
+Hagrid Rubeus, 420
+ranveer sharma, 630
+rohan sinha, 940
+sajjid, 630
+*/
+-- 13. Write a SQL query to calculate the Average Ticket Price for Events in Each Category and Venue.
+
+select e.event_type, avg(e.ticket_price) as avg_tkt_price
+from venue v join event e on e.venue_id=v.venue_id
+join booking b on b.event_id=e.event_id
+group by event_type;
+/*
+# event_type, avg_tkt_price
+concert, 600.0000
+sports, 6075.0000
+award, 49500.0000
+humour, 920.0000
+drama, 3000.0000
+relegious, 9000.0000
+*/
+
+
+
+-- Tasks 4: Subquery and its types
+-- 1. Calculate the Average Ticket Price for Events in Each Venue Using a Subquery.
+select venue_name, avg(e.ticket_price) as Average_Ticket_price
+from venue v join event e on v.venue_id=e.venue_id
+group by v.venue_name;
+/*
+# venue_name, Average_Ticket_price
+pondicherry , 600.0000
+chennai, 3500.0000
+mumbai, 8000.0000
+hydrabad, 6000.0000
+pune, 9000.0000
+goa, 90000.0000
+udipi, 920.0000
+bhopal, 3000.0000
+ujjain, 9000.0000
+*/
+-- 2. Find Events with More Than 50% of Tickets Sold using subquery.
+select *
+from event
+where (total_seats-available_seats)>(total_seats/2);
+/*
+# event_id, event_name, event_date, event_time, total_seats, available_seats, ticket_price, event_type, venue_id
+2, CSK vs RCB, 2024-04-11, 19:30, 23000, 3, 3600, sports, 2
+3, CSK vs RR, 2024-04-19, 19:30, 23000, 10, 3400, sports, 2
+4, Late Ms. Lata Mangeshkar Musical Concert, 2024-05-01, 15:30, 28000, 100, 8000, sports, 1
+9, conference cup, 2024-05-01, 15:30, 28000, 99, 8000, sports, 1
+16, fifa, 2024-09-11, 13:30, 28000, 993, 6000, sports, 16
+17, film fare, 2024-03-21, 1:30, 28000, 89, 9000, award, 15
+18, oscars, 2024-05-29, 7:30, 28000, 9, 90000, award, 7
+19, standup commedy, 2024-03-21, 4:30, 28000, 999, 920, humour, 8
+20, folk dance, 2024-02-11, 9:30, 28000, 879, 3000, drama, 9
+21, discourse, 2024-07-11, 7:34, 28000, 8, 9000, relegious, 10
+*/
+-- 3. Calculate the Total Number of Tickets Sold for Each Event.
+select event_name, sum(total_seats-available_seats) as tkt_sold
+from event
+group by event_name;
+
+/*
+# event_name, tkt_sold
+Late Ms. Lata Mangeshkar Musical Concert, 27950
+CSK vs RCB, 22997
+CSK vs RR, 22990
+conference cup, 27901
+fifa, 27007
+film fare, 27911
+oscars, 27991
+standup commedy, 27001
+folk dance, 27121
+discourse, 27992
+*/
+-- 4.Find Users Who Have Not Booked Any Tickets Using a NOT EXISTS Subquery.
+select * 
+from customer
+where customer_id not in (select customer_id from booking );
+/*
+# customer_id, customer_name, email, phone_number
+16, harry potter, harry@gmail.com, 45454545
+17, ronald weasley, ron@gmail.com, 45454545
+18, hermione granger, her@gmail.com, 45454545
+19, draco malfoy, drac@gmail.com, 45454545
+20, ginni weasley, ginni@gmail.com, 45454545
+21, Hagrid Rubeus, hagrid@gmail.com, 23450000
+*/
+-- 5. List Events with No Ticket Sales Using a NOT IN Subquery.
+select event_name
+from event
+where event_id not in(select event_id from booking);
+
+
+-- 6. Calculate the Total Number of Tickets Sold for Each Event Type Using a Subquery in the FROM Clause.
+select event_name, sum(available_seats) as total_tkt_sold
+from event
+group by event_name;
+/*
+# event_name, total_tkt_sold
+Late Ms. Lata Mangeshkar Musical Concert, 370
+CSK vs RCB, 3
+CSK vs RR, 10
+conference cup, 99
+fifa, 993
+film fare, 89
+oscars, 9
+standup commedy, 999
+folk dance, 879
+discourse, 8
+*/
+
+-- 7. Find Events with Ticket Prices Higher Than the Average Ticket Price Using a Subquery in the WHERE Clause.
+select event_name, ticket_price
+from event
+where ticket_price > (select avg(ticket_price) from event);
+/*
+# event_name, ticket_price
+oscars, 90000
+*/
+
+-- 9-. List Users Who Have Booked Tickets for Events in a Given Venue Using a Subquery in the WHERE Clause.
+ 
+select event_name, SUM(total_seats-available_seats) as Total_tickets_sold
+from event  JOIN venue  ON event.venue_id=venue.venue_id
+where venue_name IN ('mumbai','chennai')
+group by event_name;
+/*
+# event_name, Total_tickets_sold
+Late Ms. Lata Mangeshkar Musical Concert, 27900
+conference cup, 27901
+CSK vs RCB, 22997
+CSK vs RR, 22990
+*/
+-- 10. Calculate the Total Number of Tickets Sold for Each Event Category Using a Subquery with GROUP BY.
+select e.event_type, sum(b.num_tickets) as tkt_sold
+from event e join booking b on e.event_id=b.event_id
+group by e.event_type;
+/*
+# event_type, tkt_sold
+concert, 10
+sports, 33
+award, 7
+humour, 6
+drama, 3
+relegious, 4
+*/
+-- 12. Calculate the Average Ticket Price for Events in Each Venue Using a Subquery
+select v.venue_name, avg(e.ticket_price) As average_ticket_price
+from venue v join event e on v.venue_id = e.venue_id
+group by v.venue_name;
+/*
+# venue_name, average_ticket_price
+pondicherry , 600.0000
+udipi, 920.0000
+bhopal, 3000.0000
+chennai, 3500.0000
+hydrabad, 6000.0000
+mumbai, 8000.0000
+pune, 9000.0000
+ujjain, 9000.0000
+goa, 90000.0000
+*/
+
